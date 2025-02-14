@@ -15,12 +15,6 @@ export default function Navbar() {
                         <SearchBar />
                     </div>
 
-                    <div className="">
-                        <Button className="flex items-center gap-2 rounded bg-primary py-3 px-6 text-sm text-white data-[hover]:bg-primary data-[active]:bg-primary">
-                            <PlusCircleIcon className="h-4 w-4" />
-                            <span>Add New</span>
-                        </Button>
-                    </div>
                 </div>
             </div>
         </Disclosure>
