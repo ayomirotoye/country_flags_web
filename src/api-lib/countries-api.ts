@@ -2,10 +2,10 @@ import axios from "axios";
 import { Country } from "../pages/countries";
 import { apiBaseUrl } from "../utils/constant";
 
-interface ApiResponse {
+interface ApiResponse<T> {
   next: string,
   previous: string,
-  dataList: Country[]
+  dataList: T
 }
 
 export const fetchCountriesFromApi = async (startIndex: number, count: number): Promise<Country[]> => {
@@ -17,7 +17,7 @@ export const fetchCountriesFromApi = async (startIndex: number, count: number): 
       },
     });
 
-    const countries: ApiResponse = response.data;
+    const countries: ApiResponse<Country[]> = response.data;
 
     const countriesWithId = countries?.dataList?.map((country, i) => ({
       ...country,
@@ -29,6 +29,24 @@ export const fetchCountriesFromApi = async (startIndex: number, count: number): 
 
   } catch (error) {
     console.error('Error fetching countries:', error);
+    throw error;
+  }
+};
+
+export const fetchCountryDetailsFromApi = async (countryCode: string): Promise<Country> => {
+  try {
+    const response = await axios.get(apiBaseUrl.concat("/countries"), {
+      params: {
+        countryIsoCode: countryCode,
+      },
+    });
+
+    const countries: ApiResponse<Country[]> = response.data;
+
+    return countries.dataList?.length > 0 ? countries.dataList[0] : {} as Country;
+
+  } catch (error) {
+    console.error('Error fetching country detail:', error);
     throw error;
   }
 };

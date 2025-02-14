@@ -1,16 +1,27 @@
 import { useState, useRef, useEffect } from "react";
 import { fetchCountriesFromApi } from "../api-lib/countries-api";
+import CountryCard from "../components/CountryDetails";
 
 type SubHeadingProps = {
     heading: string;
     subHeading: string;
 }
 
+type Currency = {
+    code: string;
+    name: string;
+}
+
 export interface Country {
     id: number;
+    iso2: string;
     name: string;
     unicodeFlag?: string;
     flagUrl?: string;
+    capital?: string;
+    population?: number;
+    surfaceArea?: number;
+    currency?: Currency;
 }
 
 const SectionHeading = ({ heading, subHeading }: SubHeadingProps) => {
@@ -22,9 +33,11 @@ const SectionHeading = ({ heading, subHeading }: SubHeadingProps) => {
 }
 
 const AppCountries = () => {
-    const [country, setCountries] = useState<Country[]>([]);;
+    const [country, setCountries] = useState<Country[]>([]);
     const [isFetching, setIsFetching] = useState(false);
     const [startIndex, setStartIndex] = useState(0);
+    const [currentCountry, setCurrentCountry] = useState<Country>({} as Country)
+    const [showDetails, setShowDetails] = useState(false)
     const observerRef = useRef<HTMLDivElement | null>(null);
 
     const loadMoreCountries = async () => {
@@ -32,7 +45,7 @@ const AppCountries = () => {
 
         setIsFetching(true);
         try {
-            const newCountries = await fetchCountriesFromApi(startIndex, 10); 
+            const newCountries = await fetchCountriesFromApi(startIndex, 10);
             setCountries((prevCountries) => [...prevCountries, ...newCountries]);
             setStartIndex((prevStartIndex: number) => prevStartIndex + 10)
         } catch (error) {
@@ -60,15 +73,22 @@ const AppCountries = () => {
         return () => observer.disconnect();
     }, []);
 
+    const handleShowDetails = (theCountry: Country) => {
+        setCurrentCountry(theCountry)
+        setShowDetails(true)
+    }
+
     return (<>
-        <section className="container py-16 bg-white sm:px-2 md:px-14">
+        <section className="container py-16 bg-white md:px-14">
+            <CountryCard show={showDetails} country={currentCountry} />
             <div className="container mx-auto text-center">
                 <SectionHeading heading="Countries" subHeading="Listing the countries of the world and their flags" />
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
                     {country.map((theCountry, index) => (
                         <div
                             key={index}
-                            className="bg-white p-6 rounded-2xl shadow-lg transform hover:scale-105 transition duration-300"
+                            className="bg-white p-6 rounded-2xl shadow-lg transform hover:scale-105 transition duration-300 cursor-pointer"
+                            onClick={() => handleShowDetails(theCountry)}
                         >
                             <img
                                 className="w-32 h-32 mx-auto rounded-full mb-4"
@@ -76,7 +96,8 @@ const AppCountries = () => {
                                 alt={theCountry.name}
                             />
                             <h3 className="text-xl font-semibold text-gray-800">{theCountry.name}</h3>
-                            <p className="text-gray-600">{theCountry.id}</p>
+                            <p className="text-gray-600">{theCountry.iso2}</p>
+
                         </div>
                     ))}
                 </div>
@@ -84,7 +105,8 @@ const AppCountries = () => {
                     {isFetching && <span className="text-gray-500">Loading more...</span>}
                 </div>
             </div>
-        </section></>);
+        </section>
+    </>);
 }
 
 export default AppCountries;
