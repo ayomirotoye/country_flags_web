@@ -1,50 +1,48 @@
-# React + TypeScript + Vite
+# Country Flag App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This React application displays country flags and information, allowing users to search for specific countries. It's built using technologies like Tailwind CSS, Headless UI, and Vite for a fast and efficient development experience.  
 
-Currently, two official plugins are available:
+It fetches data from a Spring Boot API.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Overview
 
-## Expanding the ESLint configuration
+The Country Flag App is a demo app that provides a user-friendly interface to browse and search for countries.  It fetches country data, including flags, names, and other relevant information, from a backend API.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Technologies Used
 
-- Configure the top-level `parserOptions` property like this:
+* **React:** The JavaScript library for building user interfaces.
+* **Tailwind CSS:** A utility-first CSS framework for rapidly styling the application.
+* **Headless UI:** A set of unstyled, accessible UI components for building custom, fully accessible UI elements.
+* **Vite:** A fast build tool and development server for modern web development.
+* **Spring Boot API:** The backend service providing country data. 
+* **Axios:**  For making HTTP requests to the Spring Boot API.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Getting Started
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### Prerequisites
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+* Node.js and npm (or yarn, pnpm)
+* A running Spring Boot API providing country data (clone and run the API on `https://github.com/ayomirotoye/country_flags_api`).
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+### Installation
+
+1. Clone the repository: `git clone https://github.com/ayomirotoye/country_flags_web`
+2. Navigate to the project directory: `cd country_flag_app`
+3. Install dependencies: `npm install` (or `yarn install`, `pnpm install`)
+
+### Development
+
+1. Start the development server: `npm run dev` (or `yarn dev`, `pnpm dev`)
+2. Open your browser and go to `http://localhost:5173` (or the port shown in your terminal).
+
+### Building for Production
+
+1. Build the application: `npm run build` (or `yarn build`, `pnpm build`)
+2. The built files will be in the `dist` directory.
+
+### Running the Production Build
+
+1. Serve the `dist` directory using a static file server (e.g., `serve`, `nginx`, `apache`).  For example, using `serve`:
+   ```bash
+   npm install -g serve
+   serve -s dist

@@ -1,8 +1,16 @@
 import { useState, useRef, useEffect } from "react";
+import { fetchCountriesFromApi } from "../api-lib/countries-api";
 
 type SubHeadingProps = {
     heading: string;
     subHeading: string;
+}
+
+export interface Country {
+    id: number;
+    name: string;
+    unicodeFlag?: string;
+    flag?: string;
 }
 
 const SectionHeading = ({ heading, subHeading }: SubHeadingProps) => {
@@ -13,27 +21,31 @@ const SectionHeading = ({ heading, subHeading }: SubHeadingProps) => {
     );
 }
 
-const fetchCountries = (startIndex: number, count: number) => {
-    return Array.from({ length: count }, (_, i) => ({
-      id: startIndex + i + 1,
-      name: `Country ${startIndex + i + 1}`,
-      currency: "NGN",
-      image: `https://i.pravatar.cc/150?img=${(startIndex + i) % 70}`, // Random avatars
-    }));
-  };
-
 const AppCountries = () => {
-    const [country, setCountries] = useState(() => fetchCountries(0, 12));
+    const [country, setCountries] = useState<Country[]>([]);;
     const [isFetching, setIsFetching] = useState(false);
+    const [startIndex, setStartIndex] = useState(0);
     const observerRef = useRef<HTMLDivElement | null>(null);
 
-    const loadMoreCountries = () => {
+    const loadMoreCountries = async () => {
+        if (isFetching) return; // Prevent multiple fetches while one is in progress
+
         setIsFetching(true);
-        setTimeout(() => {
-          setCountries((prev) => [...prev, ...fetchCountries(prev.length, 6)]);
-          setIsFetching(false);
-        }, 1000);
-      };
+        try {
+            const newCountries = await fetchCountriesFromApi(startIndex, 10); // Fetch 10 more
+            console.log("countries:::", newCountries)
+            setCountries((prevCountries) => [...prevCountries, ...newCountries]);
+            setStartIndex((prevStartIndex: number) => prevStartIndex + 10) // increment start index
+        } catch (error) {
+            console.error("Error loading more countries:", error)
+        } finally {
+            setIsFetching(false);
+        }
+        // setTimeout(() => {
+        //   setCountries((prev) => [...prev, ...fetchCountries(prev.length, 6)]);
+        //   setIsFetching(false);
+        // })
+    };
 
 
     useEffect(() => {
@@ -51,25 +63,25 @@ const AppCountries = () => {
         }
 
         return () => observer.disconnect();
-    }, [isFetching]);
+    }, []);
 
     return (<>
         <section className="container py-16 bg-white sm:px-2 md:px-14">
             <div className="container mx-auto text-center">
                 <SectionHeading heading="Countries" subHeading="Listing the countries of the world and their flags" />
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-                    {country.map((tehCountry, index) => (
+                    {country.map((theCountry, index) => (
                         <div
                             key={index}
                             className="bg-white p-6 rounded-2xl shadow-lg transform hover:scale-105 transition duration-300"
                         >
                             <img
                                 className="w-32 h-32 mx-auto rounded-full mb-4"
-                                src={tehCountry.image}
-                                alt={tehCountry.name}
+                                src={theCountry.flag}
+                                alt={theCountry.name}
                             />
-                            <h3 className="text-xl font-semibold text-gray-800">{tehCountry.name}</h3>
-                            <p className="text-gray-600">{tehCountry.currency}</p>
+                            <h3 className="text-xl font-semibold text-gray-800">{theCountry.name}</h3>
+                            <p className="text-gray-600">{theCountry.id}</p>
                         </div>
                     ))}
                 </div>
