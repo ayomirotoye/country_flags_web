@@ -33,6 +33,7 @@ const AppCountries = () => {
         setIsFetching(true);
         try {
             const newCountries = await fetchCountriesFromApi(startIndex, 10); // Fetch 10 more
+            console.log("countries:::", newCountries)
             setCountries((prevCountries) => [...prevCountries, ...newCountries]);
             setStartIndex((prevStartIndex: number) => prevStartIndex + 10) // increment start index
         } catch (error) {
