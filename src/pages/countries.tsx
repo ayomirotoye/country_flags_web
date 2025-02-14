@@ -28,23 +28,18 @@ const AppCountries = () => {
     const observerRef = useRef<HTMLDivElement | null>(null);
 
     const loadMoreCountries = async () => {
-        if (isFetching) return; // Prevent multiple fetches while one is in progress
+        if (isFetching) return;
 
         setIsFetching(true);
         try {
-            const newCountries = await fetchCountriesFromApi(startIndex, 10); // Fetch 10 more
-            console.log("countries:::", newCountries)
+            const newCountries = await fetchCountriesFromApi(startIndex, 10); 
             setCountries((prevCountries) => [...prevCountries, ...newCountries]);
-            setStartIndex((prevStartIndex: number) => prevStartIndex + 10) // increment start index
+            setStartIndex((prevStartIndex: number) => prevStartIndex + 10)
         } catch (error) {
             console.error("Error loading more countries:", error)
         } finally {
             setIsFetching(false);
         }
-        // setTimeout(() => {
-        //   setCountries((prev) => [...prev, ...fetchCountries(prev.length, 6)]);
-        //   setIsFetching(false);
-        // })
     };
 
 
