@@ -10,7 +10,7 @@ export interface Country {
     id: number;
     name: string;
     unicodeFlag?: string;
-    flag?: string;
+    flagUrl?: string;
 }
 
 const SectionHeading = ({ heading, subHeading }: SubHeadingProps) => {
@@ -77,7 +77,7 @@ const AppCountries = () => {
                         >
                             <img
                                 className="w-32 h-32 mx-auto rounded-full mb-4"
-                                src={theCountry.flag}
+                                src={theCountry.flagUrl}
                                 alt={theCountry.name}
                             />
                             <h3 className="text-xl font-semibold text-gray-800">{theCountry.name}</h3>

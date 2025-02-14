@@ -22,7 +22,7 @@ export const fetchCountriesFromApi = async (startIndex: number, count: number): 
     const countriesWithId = countries?.dataList?.map((country, i) => ({
       ...country,
       id: startIndex + i + 1,
-      flag: country.unicodeFlag || `https://i.pravatar.cc/150?img=${(startIndex + i) % 70}`
+      flagUrl: country.flagUrl || `https://i.pravatar.cc/150?img=${(startIndex + i) % 70}`
     }))
 
     return countriesWithId;
